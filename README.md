@@ -1,4 +1,4 @@
-# ResGRU Decoder
+# Resgru Decoder
 
 A recurrent neural network decoder for the **heavy-hexagon quantum error correcting code**, built with [Stim](https://github.com/quantumlib/Stim) and [PyTorch](https://pytorch.org/).
 
