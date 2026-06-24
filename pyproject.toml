@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "resgru-decoder"
+version = "0.1.0"
+description = "GRU-based neural network decoder for the heavy-hexagon quantum error correcting code"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Ashutosh Kumar" }]
+requires-python = ">=3.10"
+dependencies = [
+    "stim>=1.13",
+    "torch>=2.0",
+    "numpy>=1.24",
+    "tqdm>=4.65",
+]
+
+[project.urls]
+Repository = "https://github.com/ashutosh-kumar/resgru-decoder"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["hhd*"]

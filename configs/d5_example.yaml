@@ -1,0 +1,26 @@
+# Example training configuration for distance-5 decoder
+# Pass flags directly to scripts/train.py; this file is for documentation.
+
+distance: 5
+rounds: [3, 5, 7, 9, 11, 13, 15]
+memory_basis: Z
+
+# Model
+hidden_size: 256
+num_layers: 2
+
+# Training
+epochs: 100
+batch_size: 512
+lr: 1e-3
+warmup_epochs: 5
+save_every: 5
+
+# On-the-fly Stim training
+train_mode: stim
+stim_noise: 1e-3
+stim_train_samples: 10000000
+stim_seed: 0
+
+# Workers per GPU
+workers: 8

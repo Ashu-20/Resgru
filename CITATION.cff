@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: "ResGRU Decoder: A Recurrent Neural Network Decoder for the Heavy-Hexagon Code"
+type: software
+authors:
+  - family-names: Kumar
+    given-names: Ashutosh
+repository-code: https://github.com/ashutosh-kumar/resgru-decoder
+license: MIT
+version: 0.1.0
+date-released: "2024-01-01"

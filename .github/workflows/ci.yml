@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install stim numpy
+
+      - name: Install package
+        run: pip install -e . --no-deps
+
+      - name: Smoke test — circuit import and generation
+        run: |
+          python -c "
+          from hhd.circuit.hh_circ import generate_circuit
+          circ = generate_circuit(rounds=3, distance=3, memory_basis='Z',
+                                  after_clifford_depolarization=1e-3)
+          print('d=3 Z-basis circuit OK, instructions:', len(list(circ)))
+          circ_x = generate_circuit(rounds=3, distance=3, memory_basis='X',
+                                    after_clifford_depolarization=1e-3)
+          print('d=3 X-basis circuit OK, instructions:', len(list(circ_x)))
+          "
+
+      - name: Smoke test — dataset import
+        run: |
+          python -c "
+          from hhd.data.datasets import HHStimDataset, collate_fn
+          ds = HHStimDataset(distance=3, rounds=[3, 5], samples_per_epoch=8,
+                             noise_p=1e-3, seed=0)
+          seq, final_t, init_t, label_t, length = ds[0]
+          print('HHStimDataset item shapes:', seq.shape, final_t.shape, init_t.shape)
+          "
+
+      - name: Smoke test — model import and forward pass
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          python -c "
+          import torch
+          from hhd.models.gru_decoder import Branched_GRU
+          model = Branched_GRU(input_size=12, hidden_size=32, z_stab=6, num_layers=2)
+          B, T = 4, 5
+          seq = torch.zeros(B, T, 12)
+          final = torch.zeros(B, 6)
+          init = torch.zeros(B, 6)
+          lengths = torch.tensor([T]*B)
+          out = model(seq, final, init, lengths)
+          print('Forward pass output shape:', out.shape)
+          assert out.shape == (B, 1)
+          "
